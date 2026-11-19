@@ -10,6 +10,7 @@ export interface Service {
   description: string;
   durationMinutes: number;
   priceFrom: number;
+  image: string;
   deviceIds: string[];
 }
 
@@ -25,6 +26,7 @@ export interface CampaignPackage {
   endsAt: string;
   highlights: string[];
   serviceId: string;
+  image: string;
   badge?: string;
   featured?: boolean;
 }
@@ -51,6 +53,7 @@ export interface Device {
   benefits: string[];
   usedFor: string[];
   accent: string;
+  image: string;
 }
 
 export interface Expert {

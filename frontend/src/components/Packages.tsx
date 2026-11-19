@@ -1,97 +1,107 @@
 import { useMemo, useState } from 'react';
-import { Check, Clock } from 'lucide-react';
+import { ArrowRight, Clock } from 'lucide-react';
 import type { CampaignPackage, ServiceCategory } from '../types';
 import { CATEGORY_LABEL } from '../data/catalog';
 import { salonApi } from '../services/api';
 import { tl, useAsync, useCountdown } from '../hooks';
 import type { BookingPreset } from './BookingModal';
 
-function Countdown({ endsAt }: { endsAt: string }) {
+function Timer({ endsAt }: { endsAt: string }) {
   const c = useCountdown(endsAt);
-  if (c.expired) return <div className="countdown"><span>Kampanya sona erdi</span></div>;
+  if (c.expired) return <div className="timer">Kampanya sona erdi</div>;
   const p = (n: number) => String(n).padStart(2, '0');
   return (
-    <div className="countdown" aria-label={`Kampanyanın bitmesine ${c.days} gün ${c.hours} saat`}>
-      <Clock size={14} />
-      <span>Bitmesine</span>
-      <div>{c.days}<small>g</small></div>
-      <div>{p(c.hours)}<small>s</small></div>
-      <div>{p(c.minutes)}<small>d</small></div>
-      <div>{p(c.seconds)}<small>sn</small></div>
+    <div className="timer">
+      <Clock size={14} /> Kampanya bitimine <b>{c.days} gün {p(c.hours)}:{p(c.minutes)}:{p(c.seconds)}</b>
     </div>
   );
 }
 
-function PackageCard({ pkg, onBook }: { pkg: CampaignPackage; onBook: (p: BookingPreset) => void }) {
+const preset = (p: CampaignPackage): BookingPreset => ({ serviceId: p.serviceId, packageId: p.id, packageTitle: p.title });
+
+function Featured({ pkg, onBook }: { pkg: CampaignPackage; onBook: (p: BookingPreset) => void }) {
   const save = pkg.regularPrice - pkg.campaignPrice;
-  const pct = Math.round((save / pkg.regularPrice) * 100);
   return (
-    <article className={`card pkg reveal ${pkg.featured ? 'featured' : ''}`}>
-      <div className="pkg-top">
-        <span className="pkg-cat">{CATEGORY_LABEL[pkg.category]}</span>
-        {pkg.badge && <span className="pkg-badge">{pkg.badge}</span>}
+    <article className="pkg-feature reveal">
+      <div className="ph zoom"><img src={pkg.image} alt={pkg.title} loading="lazy" /></div>
+      <div className="pkg-feature-body">
+        <div className="pkg-label">{pkg.badge && <em>{pkg.badge}</em>}{CATEGORY_LABEL[pkg.category]}</div>
+        <h3>{pkg.title}</h3>
+        <p>{pkg.subtitle}</p>
+        <div className="price">
+          <strong>{tl(pkg.campaignPrice)}</strong>
+          <s>{tl(pkg.regularPrice)}</s>
+        </div>
+        <div className="price-meta">
+          {pkg.sessions} seans · seans başı {tl(Math.round(pkg.campaignPrice / pkg.sessions))} · <b>{tl(save)} avantaj</b>
+        </div>
+        <ul className="checks">
+          {pkg.highlights.map((h) => <li key={h}>{h}</li>)}
+        </ul>
+        <Timer endsAt={pkg.endsAt} />
+        <div className="actions">
+          <button className="btn btn-dark" onClick={() => onBook(preset(pkg))}>
+            Bu Paketle Randevu Al <ArrowRight size={17} />
+          </button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function Card({ pkg, onBook }: { pkg: CampaignPackage; onBook: (p: BookingPreset) => void }) {
+  const pct = Math.round(((pkg.regularPrice - pkg.campaignPrice) / pkg.regularPrice) * 100);
+  return (
+    <button className="pkg-card reveal" onClick={() => onBook(preset(pkg))} aria-label={`${pkg.title} paketiyle randevu al`}>
+      <div className="ph">
+        <img src={pkg.image} alt="" loading="lazy" />
+        <span className="tagline">{pkg.badge ?? `%${pct} indirim`}</span>
       </div>
       <h3>{pkg.title}</h3>
-      <p className="pkg-sub">{pkg.subtitle}</p>
-      <div className="pkg-price">
-        <strong>{tl(pkg.campaignPrice)}</strong>
-        <s>{tl(pkg.regularPrice)}</s>
+      <p className="sub">{pkg.subtitle}</p>
+      <Timer endsAt={pkg.endsAt} />
+      <div className="row">
+        <span><strong>{tl(pkg.campaignPrice)}</strong><s>{tl(pkg.regularPrice)}</s></span>
+        <span className="link">Randevu al <ArrowRight size={15} /></span>
       </div>
-      <div className="pkg-meta">
-        <span>{pkg.sessions} seans · seans başı {tl(Math.round(pkg.campaignPrice / pkg.sessions))}</span>
-        <b>{tl(save)} kazanç (%{pct})</b>
-      </div>
-      <ul className="pkg-hl">
-        {pkg.highlights.map((h) => (
-          <li key={h}><Check size={16} /> {h}</li>
-        ))}
-      </ul>
-      <Countdown endsAt={pkg.endsAt} />
-      <button
-        className={`btn btn-block ${pkg.featured ? 'btn-rose' : 'btn-primary'}`}
-        onClick={() => onBook({ serviceId: pkg.serviceId, packageId: pkg.id, packageTitle: pkg.title })}
-      >
-        Bu Paketle Randevu Al
-      </button>
-    </article>
+    </button>
   );
 }
 
 export default function Packages({ onBook }: { onBook: (p: BookingPreset) => void }) {
   const { data, loading } = useAsync(() => salonApi.getPackages());
   const [filter, setFilter] = useState<ServiceCategory | 'all'>('all');
-  const list = useMemo(
-    () => (data ?? []).filter((p) => filter === 'all' || p.category === filter),
-    [data, filter],
+  const featured = data?.find((p) => p.featured);
+  const rest = useMemo(
+    () => (data ?? []).filter((p) => p !== featured && (filter === 'all' || p.category === filter)),
+    [data, filter, featured],
   );
 
   return (
-    <section className="section" id="kampanyalar">
+    <section className="section section-alt" id="kampanyalar">
       <div className="container">
-        <div className="pkg-toolbar">
-          <div className="section-head" style={{ marginBottom: 0 }}>
-            <span className="eyebrow">Kampanyalı Seans Paketleri</span>
-            <h2>Paket alın, <em>seans başına</em> daha az ödeyin.</h2>
-            <p>Tüm paketler 12 ay geçerli, kaçırılan seans telafisi ve ücretsiz deneme atışı dahil.</p>
-          </div>
-          <div className="chips" role="tablist" aria-label="Paket kategorisi">
-            {(['all', 'lazer', 'cilt', 'vucut'] as const).map((c) => (
-              <button
-                key={c}
-                role="tab"
-                aria-selected={filter === c}
-                className={`chip ${filter === c ? 'active' : ''}`}
-                onClick={() => setFilter(c)}
-              >
-                {c === 'all' ? 'Tümü' : CATEGORY_LABEL[c]}
-              </button>
-            ))}
+        <div className="head reveal">
+          <div>
+            <span className="kicker">Kampanyalı Seans Paketleri</span>
+            <h2>Paket alın, seans başına daha az ödeyin.</h2>
+            <p>Tüm paketler 12 ay geçerli. Kaçırılan seans telafisi ve ücretsiz deneme atışı dahil.</p>
           </div>
         </div>
+
         {loading ? <div className="loader" /> : (
-          <div className="pkg-grid">
-            {list.map((p) => <PackageCard key={p.id} pkg={p} onBook={onBook} />)}
-          </div>
+          <>
+            {featured && <Featured pkg={featured} onBook={onBook} />}
+            <div className="tabs" role="tablist" aria-label="Paket kategorisi" style={{ marginBottom: 36 }}>
+              {(['all', 'lazer', 'cilt', 'vucut'] as const).map((c) => (
+                <button key={c} role="tab" aria-selected={filter === c} className={`tab ${filter === c ? 'active' : ''}`} onClick={() => setFilter(c)}>
+                  {c === 'all' ? 'Tüm paketler' : CATEGORY_LABEL[c]}
+                </button>
+              ))}
+            </div>
+            <div className="pkg-grid">
+              {rest.map((p) => <Card key={p.id} pkg={p} onBook={onBook} />)}
+            </div>
+          </>
         )}
       </div>
     </section>

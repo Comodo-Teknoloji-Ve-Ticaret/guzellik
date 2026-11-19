@@ -47,7 +47,8 @@ export default function MyAppointments({ onClose, onBook }: { onClose: () => voi
 
   return (
     <div className="modal-backdrop" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="my-title" style={{ width: 'min(620px, 100%)' }}>
+      <div className="modal narrow" role="dialog" aria-modal="true" aria-labelledby="my-title">
+        <div className="modal-main">
         <div className="modal-head">
           <div>
             <h3 id="my-title">Randevularım</h3>
@@ -60,7 +61,7 @@ export default function MyAppointments({ onClose, onBook }: { onClose: () => voi
             <div className="field" style={{ flex: 1 }}>
               <input aria-label="Telefon" value={phone} onChange={(e) => setPhone(e.target.value)} inputMode="tel" placeholder="05xx xxx xx xx" />
             </div>
-            <button className="btn btn-primary" disabled={phone.replace(/\D/g, '').length < 10}><Search size={17} /> Sorgula</button>
+            <button className="btn btn-dark" disabled={phone.replace(/\D/g, '').length < 10}><Search size={17} /> Sorgula</button>
           </form>
 
           {loading && <div className="loader" />}
@@ -69,16 +70,16 @@ export default function MyAppointments({ onClose, onBook }: { onClose: () => voi
             list.length === 0 ? (
               <div className="empty-hint">
                 Bu numaraya ait randevu bulunamadı.
-                <div style={{ marginTop: 14 }}><button className="btn btn-rose btn-sm" onClick={onBook}>Yeni Randevu Al</button></div>
+                <div style={{ marginTop: 14 }}><button className="btn btn-accent btn-sm" onClick={onBook}>Yeni Randevu Al</button></div>
               </div>
             ) : (
-              <div className="opt-list" style={{ marginTop: 20 }}>
+              <div style={{ marginTop: 20, borderTop: '1px solid var(--line)' }}>
                 {list.map((a) => {
                   const svc = SERVICES.find((s) => s.id === a.serviceId);
                   const exp = EXPERTS.find((e) => e.id === a.expertId);
                   const upcoming = a.date >= today && a.status !== 'İptal';
                   return (
-                    <div className="card appt" key={a.id}>
+                    <div className="appt" key={a.id}>
                       <div className="grow">
                         <strong>{svc?.name ?? a.serviceId}</strong>
                         <span>
@@ -88,7 +89,7 @@ export default function MyAppointments({ onClose, onBook }: { onClose: () => voi
                       </div>
                       <span className={`status ${a.status}`}>{a.status}</span>
                       {upcoming && (
-                        <button className="btn btn-ghost btn-sm" onClick={() => cancel(a)}>İptal Et</button>
+                        <button className="btn btn-line btn-sm" onClick={() => cancel(a)}>İptal Et</button>
                       )}
                     </div>
                   );
@@ -96,6 +97,7 @@ export default function MyAppointments({ onClose, onBook }: { onClose: () => voi
               </div>
             )
           )}
+        </div>
         </div>
       </div>
     </div>

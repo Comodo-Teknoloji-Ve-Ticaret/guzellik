@@ -34,6 +34,7 @@ const daysFromNow = (d: number) => {
 export const SERVICES: Service[] = [
   {
     id: 'lazer-tum-vucut',
+    image: 'img/lazer-tum-vucut.jpg',
     category: 'lazer',
     name: 'Tüm Vücut Lazer Epilasyon',
     description: 'Yüz hariç tüm bölgeler tek seansta. Buz başlıklı diode teknolojisiyle konforlu uygulama.',
@@ -43,6 +44,7 @@ export const SERVICES: Service[] = [
   },
   {
     id: 'lazer-bolgesel',
+    image: 'img/lazer-bacak.jpg',
     category: 'lazer',
     name: 'Bölgesel Lazer Epilasyon',
     description: 'Koltuk altı, bikini, bacak, sırt gibi bölgeleri dilediğiniz gibi birleştirin.',
@@ -52,6 +54,7 @@ export const SERVICES: Service[] = [
   },
   {
     id: 'lazer-yuz',
+    image: 'img/lazer-yuz.jpg',
     category: 'lazer',
     name: 'Yüz Lazer Epilasyon',
     description: 'Üst dudak, çene, favori ve alın bölgesi için hassas başlık ile uygulama.',
@@ -61,6 +64,7 @@ export const SERVICES: Service[] = [
   },
   {
     id: 'hydra',
+    image: 'img/hydrafacial.jpg',
     category: 'cilt',
     name: 'Hydrafacial Derin Bakım',
     description: 'Temizlik, peeling, ekstraksiyon ve serum infüzyonu — 6 adımda ışıltılı cilt.',
@@ -70,6 +74,7 @@ export const SERVICES: Service[] = [
   },
   {
     id: 'mikroigne',
+    image: 'img/mikroigne.jpg',
     category: 'cilt',
     name: 'RF Mikroiğne (Dermapen)',
     description: 'Akne izi, gözenek ve ince çizgiler için kolajen uyarımı.',
@@ -79,6 +84,7 @@ export const SERVICES: Service[] = [
   },
   {
     id: 'leke',
+    image: 'img/leke-bakim.jpg',
     category: 'cilt',
     name: 'Leke & Karbon Peeling',
     description: 'Nd:YAG ile karbon peeling — leke, yağlanma ve gözenek görünümünde azalma.',
@@ -88,6 +94,7 @@ export const SERVICES: Service[] = [
   },
   {
     id: 'klasik-bakim',
+    image: 'img/klasik-bakim.jpg',
     category: 'cilt',
     name: 'Klasik Cilt Bakımı',
     description: 'Cilt analizi, buhar, temizlik ve cilt tipinize özel maske.',
@@ -97,6 +104,7 @@ export const SERVICES: Service[] = [
   },
   {
     id: 'bolgesel-incelme',
+    image: 'img/vucut.jpg',
     category: 'vucut',
     name: 'Bölgesel İncelme & Sıkılaşma',
     description: 'RF ve vakum destekli uygulama ile selülit görünümü ve sıkılaşma.',
@@ -109,6 +117,7 @@ export const SERVICES: Service[] = [
 export const PACKAGES: CampaignPackage[] = [
   {
     id: 'pkg-tum-vucut-8',
+    image: 'img/lazer-tum-vucut.jpg',
     title: 'Tüm Vücut 8 Seans',
     subtitle: 'Lazer epilasyonda en çok tercih edilen paket',
     category: 'lazer',
@@ -123,6 +132,7 @@ export const PACKAGES: CampaignPackage[] = [
   },
   {
     id: 'pkg-mini-3bolge',
+    image: 'img/lazer-bacak.jpg',
     title: '3 Bölge 6 Seans',
     subtitle: 'Koltuk altı + bikini + yarım bacak',
     category: 'lazer',
@@ -136,6 +146,7 @@ export const PACKAGES: CampaignPackage[] = [
   },
   {
     id: 'pkg-hydra-4',
+    image: 'img/hydrafacial.jpg',
     title: 'Hydrafacial 4 Seans',
     subtitle: 'Aylık bakım kürü — 1 seans hediye',
     category: 'cilt',
@@ -149,6 +160,7 @@ export const PACKAGES: CampaignPackage[] = [
   },
   {
     id: 'pkg-akne-izi',
+    image: 'img/mikroigne.jpg',
     title: 'Akne İzi Kürü',
     subtitle: '4 seans RF mikroiğne + 2 Hydrafacial',
     category: 'cilt',
@@ -161,6 +173,7 @@ export const PACKAGES: CampaignPackage[] = [
   },
   {
     id: 'pkg-erkek-sirt',
+    image: 'img/lazer-kol.jpg',
     title: 'Erkek Sırt + Omuz 8 Seans',
     subtitle: 'Erkeklere özel güçlü başlık ile',
     category: 'lazer',
@@ -173,6 +186,7 @@ export const PACKAGES: CampaignPackage[] = [
   },
   {
     id: 'pkg-incelme-10',
+    image: 'img/vucut.jpg',
     title: 'Sıkılaşma 10 Seans',
     subtitle: 'Karın, basen veya kol — tek bölge',
     category: 'vucut',
@@ -208,6 +222,7 @@ export const BUILDER_RULES = {
 export const DEVICES: Device[] = [
   {
     id: 'diode',
+    image: 'img/cihaz-diode.jpg',
     name: 'Buz Başlıklı Diode Lazer',
     technology: 'Diode Lazer',
     wavelength: '808 nm',
@@ -227,6 +242,7 @@ export const DEVICES: Device[] = [
   },
   {
     id: 'alex',
+    image: 'img/lazer-yuz.jpg',
     name: 'Alexandrite Lazer',
     technology: 'Alexandrite',
     wavelength: '755 nm',
@@ -246,6 +262,7 @@ export const DEVICES: Device[] = [
   },
   {
     id: 'ndyag',
+    image: 'img/cihaz-ndyag.jpg',
     name: 'Nd:YAG Lazer',
     technology: 'Nd:YAG',
     wavelength: '1064 nm',
@@ -265,6 +282,7 @@ export const DEVICES: Device[] = [
   },
   {
     id: 'hydro',
+    image: 'img/hydrafacial.jpg',
     name: 'Hidro-dermabrazyon Sistemi',
     technology: 'Vakum + Serum İnfüzyonu',
     tagline: 'Tek seansta temiz, nemli ve ışıltılı bir cilt.',
@@ -283,6 +301,7 @@ export const DEVICES: Device[] = [
   },
   {
     id: 'rf',
+    image: 'img/mikroigne.jpg',
     name: 'RF Mikroiğne',
     technology: 'Radyofrekans + Mikroiğne',
     tagline: 'Kolajen üretimini derinden uyarır.',

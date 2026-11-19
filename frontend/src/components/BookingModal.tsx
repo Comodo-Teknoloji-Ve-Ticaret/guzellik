@@ -167,6 +167,16 @@ export default function BookingModal({ preset, onClose }: { preset: BookingPrese
   return (
     <div className="modal-backdrop" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <div className="modal" role="dialog" aria-modal="true" aria-labelledby="booking-title">
+        <aside className="modal-side" aria-hidden="true">
+          <img src={service?.image ?? 'img/salon.jpg'} alt="" />
+          <span className="kicker" style={{ color: '#E6D9C8', marginBottom: 18 }}>Nüans · Online Randevu</span>
+          <ol>
+            {STEPS.map((st, i) => (
+              <li key={st} className={done || i < step ? 'done' : i === step ? 'on' : ''}>{st}</li>
+            ))}
+          </ol>
+        </aside>
+        <div className="modal-main">
         <div className="modal-head">
           <div>
             <h3 id="booking-title">{done ? 'Randevunuz alındı' : 'Online Randevu'}</h3>
@@ -198,19 +208,19 @@ export default function BookingModal({ preset, onClose }: { preset: BookingPrese
                 Randevu kodunuzu ve telefon numaranızı “Randevularım” bölümünde kullanabilirsiniz.
               </p>
               <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-                <button className="btn btn-ghost" onClick={() => downloadIcs(done, service?.name ?? 'Randevu')}>
+                <button className="btn btn-line" onClick={() => downloadIcs(done, service?.name ?? 'Randevu')}>
                   <CalendarPlus size={17} /> Takvime Ekle
                 </button>
-                <button className="btn btn-primary" onClick={onClose}>Tamam</button>
+                <button className="btn btn-dark" onClick={onClose}>Tamam</button>
               </div>
             </div>
           ) : (
             <>
               {step === 0 && (
                 <>
-                  <div className="chips cat-chips">
+                  <div className="tabs cat-chips">
                     {(['all', 'lazer', 'cilt', 'vucut'] as const).map((c) => (
-                      <button key={c} className={`chip ${cat === c ? 'active' : ''}`} onClick={() => setCat(c)}>
+                      <button key={c} className={`tab ${cat === c ? 'active' : ''}`} onClick={() => setCat(c)}>
                         {c === 'all' ? 'Tümü' : CATEGORY_LABEL[c]}
                       </button>
                     ))}
@@ -223,6 +233,7 @@ export default function BookingModal({ preset, onClose }: { preset: BookingPrese
                           className={`opt ${serviceId === s.id ? 'on' : ''}`}
                           onClick={() => { setServiceId(s.id); setPkg(null); setStep(1); }}
                         >
+                          <img className="thumb" src={s.image} alt="" />
                           <div className="grow">
                             <strong>{s.name}</strong>
                             <span>{CATEGORY_LABEL[s.category]} · {s.durationMinutes} dk</span>
@@ -244,14 +255,14 @@ export default function BookingModal({ preset, onClose }: { preset: BookingPrese
                     </div>
                   )}
                   {!pkg && service && (
-                    <div className="pkg-preset" style={{ background: 'var(--rose-light)', color: 'var(--plum)' }}>
+                    <div className="pkg-preset">
                       <span>{service.name}</span>
                       <button onClick={() => setStep(0)}>Değiştir</button>
                     </div>
                   )}
                   <div className="opt-list">
                     <button className={`opt ${expertId === ANY ? 'on' : ''}`} onClick={() => setExpertId(ANY)}>
-                      <span className="avatar" style={{ background: 'var(--gold)' }}><Users size={20} /></span>
+                      <span className="avatar"><Users size={20} /></span>
                       <div className="grow">
                         <strong>Fark etmez</strong>
                         <span>En erken müsait uzmana yönlendirilirsiniz — daha fazla saat seçeneği</span>
@@ -352,7 +363,7 @@ export default function BookingModal({ preset, onClose }: { preset: BookingPrese
                     <input type="checkbox" checked={form.consent} onChange={set('consent')} />
                     <span>Kişisel verilerimin randevu amacıyla işlenmesine ilişkin KVKK aydınlatma metnini okudum, onaylıyorum. *</span>
                   </label>
-                  {touched && errors.consent && <span className="msg" style={{ color: '#C0392B', fontSize: '.78rem' }}>{errors.consent}</span>}
+                  {touched && errors.consent && <span className="msg" style={{ color: 'var(--danger)', fontSize: '.78rem' }}>{errors.consent}</span>}
                 </div>
               )}
 
@@ -375,22 +386,23 @@ export default function BookingModal({ preset, onClose }: { preset: BookingPrese
 
               <div className="modal-foot">
                 {step > 0 ? (
-                  <button className="btn btn-ghost" onClick={() => setStep((s) => s - 1)}><ArrowLeft size={17} /> Geri</button>
+                  <button className="btn btn-line" onClick={() => setStep((s) => s - 1)}><ArrowLeft size={17} /> Geri</button>
                 ) : <span />}
                 {step < 4 ? (
                   step !== 0 && (
-                    <button className="btn btn-primary" disabled={step !== 3 && !canNext} onClick={next}>
+                    <button className="btn btn-dark" disabled={step !== 3 && !canNext} onClick={next}>
                       Devam <ArrowRight size={17} />
                     </button>
                   )
                 ) : (
-                  <button className="btn btn-rose" disabled={submitting} onClick={submit}>
+                  <button className="btn btn-accent" disabled={submitting} onClick={submit}>
                     {submitting ? 'Gönderiliyor…' : 'Randevuyu Onayla'} <Check size={17} />
                   </button>
                 )}
               </div>
             </>
           )}
+        </div>
         </div>
       </div>
     </div>
